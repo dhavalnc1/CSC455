@@ -1,0 +1,38 @@
+
+SET FOREIGN_KEY_CHECKS=0;
+delete from members;
+delete from items;
+delete from shipping;
+delete from bid;
+delete from rating;
+SET FOREIGN_KEY_CHECKS=1;
+
+insert into members values('bwash', 'happyduck1', 'Bill Washington','123 Lane Way',  9192223333, 'washingtonb@hotmail.com');
+insert into members values('sam24', 'hoppybunnies2', 'Sam Spelling', '178 Peppermint Dr.', 8188883878, 'spellings@comcast.net');
+insert into members values('dc91', 'secretcode123', 'Dhaval Chauhan', '28 Fair Way',  8082322132, 'dnc2848@uncw.edu');
+insert into members values('hs96', 'password123', 'Hayley Stueber', '2114 Plaza Dr.', 5059182222, 'hms9983@uncw.edu');
+insert into members values('dk92', 'piccolofan', 'Diamond Klock', '123 Money Way', 6921100010, 'xoxodiamond@yahoo.com');
+insert into members values('sn93', 'ilikellamas', 'Steve Neve', '828 Steve Dr.', 9092284344, 'steveskool@hotmail.com');
+insert into members values('xman28', 'fighteVil', 'Rogue', '56 Secret Lane', 2829990000, 'xmenunited3@comcast.net');
+insert into members values('hulk15', 'hulksmash', 'Bruce Banner', '272 Green Dr.', 1234567891, 'superherohulk@gmail.com');
+
+
+insert into items values(1000001, 'Electronics', 'Computer', 'Dell inspiron', 'dk92', 100, '30.00', '1.00', '50.00', '2017-06-01 00:00:01');
+insert into items values(1000002, 'Automotive', 'BMW', 'New BMW Car', 'sn93', 10, '800.00', '50.00', '1000.00', '2017-06-01 00:00:01');
+insert into items values(1000003, 'Art', 'Painting', 'Random painting from my basement', 'xman28', 1, '10.00', '10.00', '20.00', '2017-03-04 10:00:00');
+insert into items values(1000004, 'Entertainment', 'Old TV', 'Its an old tv.', 'hulk15', 1, '10.00', '10.00', '30.00', '2017-03-05 11:00:00');
+
+insert into bid values ('bwash', 1000001, '50.00', 10, '2017-03-01 00:00:01');
+insert into bid values ('sam24', 1000002, '1000.00', 5, '2017-03-02 05:00:01');
+insert into bid values ('dc91', 1000003, '20.00', 2, '2017-03-03 08:00:01');
+insert into bid values ('hs96', 1000004, '30.00', 4, '2017-03-04 10:00:01');
+
+insert into shipping values(1000001, 'Standard', '2.50');
+insert into shipping values(1000002, 'Express', '5.50');
+insert into shipping values(1000003, 'Express', '3.50');
+insert into shipping values(1000004, 'Standard', '4.50');
+
+insert into rating values(1000001, 'bwash', 'dk92', 'Very Nice', 'Bwash was rude', 4, 1);
+insert into rating values(1000002, 'sam24', 'sn93', 'Perfect', 'Clean Exchange', 4, 5);
+insert into rating values(1000003, 'dc91', 'xman28', 'Item in good condition', 'Awesome!', '5', '5');
+insert into rating values(1000004, 'hs96', 'hulk15', 'Rude guy', 'Mean girl', 0, 1);

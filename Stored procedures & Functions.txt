@@ -1,0 +1,123 @@
+#####################################################
+			Stored Procedures
+#####################################################
+
+# InsertBid
+
+CREATE DEFINER=`dnc2848`@`%` PROCEDURE `InsertBid`(
+in buyerId varchar(7),
+in ino integer(1),
+in price numeric(8,2),
+in qtyWanted integer(2),
+in bidTime timestamp
+)
+BEGIN
+	insert into bid (buyerId,ino,price,qtyWanted,bidTime) 
+    values (buyerId,ino,price,qtyWanted,bidTime) ;
+END
+
+# insertItem
+
+CREATE DEFINER=`dnc2848`@`%` PROCEDURE `insertItem`(
+in ino integer(7),
+in category	varchar(15),
+in	 title		varchar(25) ,
+in	 description	varchar(30),
+in	 sellerId	varchar(7) ,
+in	 quantity	integer(2) ,
+in	 startPrice	numeric(8, 2),
+in	 bidIncrement	numeric(5, 2),
+in	 lastBid	numeric(8, 2),
+in	 closeTime	timestamp
+)
+BEGIN
+	insert into items(ino,category,title,description,sellerId,quantity,
+    startPrice,bidIncrement,lastBid,closeTime) 
+    values (ino,category,title,description,sellerId,quantity,
+    startPrice,bidIncrement,lastBid,closeTime);
+END
+
+# InsertMember
+
+CREATE DEFINER=`dnc2848`@`%` PROCEDURE `InsertMember`(
+	in userId varchar(7),
+	in password	varchar(15),
+	in name		varchar(25),
+	in address	varchar(50),
+	in phone		integer(10),
+	in email		varchar(25)
+)
+BEGIN
+	insert into members(userId,password,name,address,phone,email) 
+    values (userId,password,name,address,phone,email);
+END
+
+# insertRatings
+
+CREATE DEFINER=`dnc2848`@`%` PROCEDURE `insertRatings`(
+in ino		integer(7) ,
+in	 buyerId	varchar(7) ,
+in	 sellerId	varchar(7) ,
+in	 sComment	varchar(30),
+in	 bComment	varchar(30),
+in	 sScale		integer(1) ,
+in	 bScale		integer(1)
+)
+BEGIN
+	insert into rating(ino,buyerId,sellerId,sComment,bComment,sScale,bScale) 
+    values (ino,buyerId,sellerId,sComment,bComment,sScale,bScale) ;
+END
+
+# insertShipping
+
+CREATE DEFINER=`dnc2848`@`%` PROCEDURE `insertShipping`(
+	in ino		integer(7) ,
+	in shipType	varchar(9) ,
+	in shipPrice	numeric(5, 2)
+)
+BEGIN
+	insert into shipping(ino,shipType,shipPrice)
+    values (ino,shipType,shipPrice);
+END
+
+# UpdateMember
+
+CREATE DEFINER=`dnc2848`@`%` PROCEDURE `UpdateMember`(
+	in userId varchar(7),
+	in password	varchar(15),
+	in name		varchar(25),
+	in address	varchar(50),
+	in phone		integer(10),
+	in email		varchar(25)
+
+)
+BEGIN
+
+UPDATE members
+SET password = @password, name = @name, 
+address =@address, phone = @phone, email=@email
+WHERE (userId = @userId);
+
+END
+
+#####################################################
+			Stored Procedures
+#####################################################
+
+# deleteBid
+
+CREATE DEFINER=`dnc2848`@`%` FUNCTION `deleteBid`(buyerId varchar(7), ino integer(7)) RETURNS int(1)
+BEGIN
+	delete from bid where bid.buyerId = buyerId and bid.ino = ino;
+RETURN (1);
+END
+
+# totalPricing
+
+CREATE DEFINER=`dnc2848`@`%` FUNCTION `totalPricing`(price numeric(8,2), qtyWanted integer(2)) RETURNS decimal(10,2)
+    DETERMINISTIC
+BEGIN
+	declare totalPrice numeric(10,2);
+    set totalPrice = price * qtyWanted;
+RETURN (totalPrice);
+END

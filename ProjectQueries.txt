@@ -1,0 +1,51 @@
+#current auctions
+select * from items where closeTime<NOW();
+#finished auctions
+select * from items where closeTime>NOW();
+
+#sort by time
+select * from items order by closeTime asc;
+#sort by price
+select * from items order by lastBidReceived desc;
+
+#seller ratings
+select items.sellerId, rating.sComment, rating.sScale from items natural join rating where members.userId==rating.sellerId;
+#buyer ratings
+select members.userId, rating.bComment, rating.bScale from members natural join rating where members.userId==rating.buyerId;
+#list of user ratings
+(select rating.sellerId as user, avg(rating.sScale) as userRating from rating group by user) union (select rating.buyerId as user, avg(rating.bScale) as userRating from rating group by user);
+#top seller
+select sellerId,  max(avgRating) from (select sellerId, avg(sScale) as avgRating from rating group by sellerId) as avgRating;
+
+# trigger
+drop trigger IF EXISTS updateBids
+DELIMITER ///
+CREATE TRIGGER updateBids AFTER UPDATE ON bid
+        
+        FOR EACH ROW
+        BEGIN
+             	IF NEW.price > price and NEW.ino = ino THEN
+                        delete orow
+                END IF;
+        END;
+///
+DELIMETER;
+
+# Views
+
+create view bidderView as select category, title, description, sellerID, quantity, bidIncrement, lasBidReceived, closeTime from items.
+create view memberView as select userId, name, phone, email from members.
+create view bidderRating(buyer, comments, rating) as select buyerId, bComment, bScale from rating.
+create view sellerRating(seller, comments, rating) as select sellerId, sComment, sScale from rating.
+
+# Prepare statement
+PREPARE inoPrepare FROM 'SELECT ino
+                    FROM items
+                    WHERE ino = ?';
+ 
+SET @newIno = 1000007;
+EXECUTE inoPrepare USING @newIno;
+ 
+DEALLOCATE PREPARE inoPrepare;
+
+

@@ -1,0 +1,62 @@
+drop table if exists members;
+drop table if exists items;
+drop table if exists bid;
+drop table if exists shipping;
+drop table if exists rating;
+
+create table members
+        (userId         varchar(7) not null,
+         password	varchar(15) not null,
+         name           varchar(25) not null,
+         address        varchar(50) not null,
+         phone          integer(10),
+         email          varchar(25),
+         primary key (userId)
+        );
+
+create table items
+        (ino            integer(7) not null,
+         category	varchar(15) check (category in ('Art', 'Entertainment', 'Electronics', 'Fashion', 'Sporting Goods', 'Toys', 'Automotive', 'Other')),
+         title          varchar(25) not null,
+         description    varchar(30),
+         sellerId	varchar(7) not null,
+         quantity	integer(2) check (quantity >=1),
+         startPrice     numeric(8, 2),
+         bidIncrement   numeric(5, 2) check (bidIncrement>=5),
+         lastBid        numeric(8, 2),
+         closeTime	timestamp,
+         primary key (ino),
+         foreign key (sellerId) references members(userId) on delete cascade
+        );
+
+create table shipping
+        (ino            integer(7) not null,
+         shipType	varchar(9) check (shipType = 'Standard' or 'Express'),
+         shipPrice	numeric(5, 2) not null,
+         primary key (ino, shipType, shipPrice),
+         foreign key (ino) references items(ino) on delete cascade
+        );
+
+create table bid
+        (buyerId        varchar(7) not null,
+         ino            integer(7) not null,
+         price          numeric(8, 2) check (price > (lastBid + bidIncrement)),
+         qtyWanted	integer(2) check (qtyWanted>=1),
+         bidTime        timestamp check (bidTime < closeTime),
+         primary key (buyerId, ino, price, qtyWanted, bidTime),
+         foreign key (buyerId) references members(userId) on delete cascade,
+         foreign key (ino) references items(ino) on delete cascade
+        );
+
+create table rating
+        (ino            integer(7) not null,
+         buyerId        varchar(7) not null,
+         sellerId	varchar(7) not null,
+         sComment	varchar(30),
+         bComment	varchar(30),
+         sScale         integer(1) check (sScale>=0 and sScale<=5),
+         bScale         integer(1) check (bScale>=0 and bScale<=5),
+         primary key (ino, buyerId, sellerId),
+         foreign key (buyerId) references bid(buyerId) on delete cascade,
+         foreign key (sellerId) references items(sellerId) on delete cascade
+        );
